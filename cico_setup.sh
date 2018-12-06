@@ -40,5 +40,4 @@ function build() {
 function cico_setup() {
   load_jenkins_vars;
   install_deps;
-  build;
 }

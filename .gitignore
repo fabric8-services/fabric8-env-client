@@ -60,7 +60,7 @@ _testmain.go
 *.test
 *.prof
 
-# projct artifacts
+# project artifacts
 /debug
 **/debug.test
 

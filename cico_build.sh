@@ -3,3 +3,5 @@
 . cico_setup.sh
 
 cico_setup;
+
+build;

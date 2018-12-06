@@ -60,11 +60,11 @@ _testmain.go
 *.test
 *.prof
 
-# fabric8-cluster-client specific artifacts
+# projct artifacts
 /debug
 **/debug.test
 
-# fabric8-cluster-client binaries
+# project binaries
 bin/
 
 # Package manager

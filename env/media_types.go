@@ -115,8 +115,12 @@ type Status struct {
 	BuildTime string `form:"buildTime" json:"buildTime" xml:"buildTime"`
 	// Commit SHA this build is based on
 	Commit string `form:"commit" json:"commit" xml:"commit"`
+	// The status of the used configuration. 'OK' or an error message if there is something wrong with the configuration used by service.
+	ConfigurationStatus string `form:"configurationStatus" json:"configurationStatus" xml:"configurationStatus"`
 	// The status of Database connection. 'OK' or an error message is displayed.
 	DatabaseStatus string `form:"databaseStatus" json:"databaseStatus" xml:"databaseStatus"`
+	// 'True' if the Developer Mode is enabled
+	DevMode *bool `form:"devMode,omitempty" json:"devMode,omitempty" xml:"devMode,omitempty"`
 	// The time when started
 	StartTime string `form:"startTime" json:"startTime" xml:"startTime"`
 }
@@ -134,6 +138,9 @@ func (mt *Status) Validate() (err error) {
 	}
 	if mt.DatabaseStatus == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "databaseStatus"))
+	}
+	if mt.ConfigurationStatus == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "configurationStatus"))
 	}
 	return
 }

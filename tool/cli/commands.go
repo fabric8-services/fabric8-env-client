@@ -78,12 +78,12 @@ Payload example:
          "cluster-url": "https://api.starter-us-east-2a.openshift.com",
          "name": "myapp-stage",
          "namespaceName": "myapp-stage",
-         "type": "stage"
+         "type": "dev"
       },
       "id": "40bbdd3d-8b5d-4fd6-ac90-7236b669af04",
       "links": {
          "meta": {
-            "Ipsam non nesciunt.": false
+            "Non nesciunt.": false
          },
          "related": "Fugiat dolorem nostrum voluptas libero.",
          "self": "Sint optio et adipisci vero fugiat."
@@ -91,7 +91,7 @@ Payload example:
       "type": "environments"
    },
    "included": [
-      "dfee74cb-9986-4135-a70d-4688967f57c3"
+      "66e696a2-7758-431f-ba8f-24cf253d9c69"
    ]
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },

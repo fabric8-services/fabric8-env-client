@@ -79,6 +79,11 @@ func (ut *environment) Validate() (err error) {
 	if ut.Attributes == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "attributes"))
 	}
+	if ut.Attributes != nil {
+		if err2 := ut.Attributes.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
 	if ut.Type != nil {
 		if !(*ut.Type == "environments") {
 			err = goa.MergeErrors(err, goa.InvalidEnumValueError(`request.type`, *ut.Type, []interface{}{"environments"}))
@@ -122,6 +127,11 @@ func (ut *Environment) Validate() (err error) {
 	if ut.Attributes == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "attributes"))
 	}
+	if ut.Attributes != nil {
+		if err2 := ut.Attributes.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
 	if !(ut.Type == "environments") {
 		err = goa.MergeErrors(err, goa.InvalidEnumValueError(`type.type`, ut.Type, []interface{}{"environments"}))
 	}
@@ -140,20 +150,39 @@ type environmentAttributes struct {
 	Type *string `form:"type,omitempty" json:"type,omitempty" xml:"type,omitempty"`
 }
 
+// Validate validates the environmentAttributes type instance.
+func (ut *environmentAttributes) Validate() (err error) {
+	if ut.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "name"))
+	}
+	if ut.Type == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "type"))
+	}
+	if ut.ClusterURL == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "cluster-url"))
+	}
+	if ut.Type != nil {
+		if !(*ut.Type == "dev" || *ut.Type == "build" || *ut.Type == "stage" || *ut.Type == "run") {
+			err = goa.MergeErrors(err, goa.InvalidEnumValueError(`request.type`, *ut.Type, []interface{}{"dev", "build", "stage", "run"}))
+		}
+	}
+	return
+}
+
 // Publicize creates EnvironmentAttributes from environmentAttributes
 func (ut *environmentAttributes) Publicize() *EnvironmentAttributes {
 	var pub EnvironmentAttributes
 	if ut.ClusterURL != nil {
-		pub.ClusterURL = ut.ClusterURL
+		pub.ClusterURL = *ut.ClusterURL
 	}
 	if ut.Name != nil {
-		pub.Name = ut.Name
+		pub.Name = *ut.Name
 	}
 	if ut.NamespaceName != nil {
 		pub.NamespaceName = ut.NamespaceName
 	}
 	if ut.Type != nil {
-		pub.Type = ut.Type
+		pub.Type = *ut.Type
 	}
 	return &pub
 }
@@ -161,13 +190,30 @@ func (ut *environmentAttributes) Publicize() *EnvironmentAttributes {
 // JSONAPI store for all the "attributes" of environment.
 type EnvironmentAttributes struct {
 	// The cluster url
-	ClusterURL *string `form:"cluster-url,omitempty" json:"cluster-url,omitempty" xml:"cluster-url,omitempty"`
+	ClusterURL string `form:"cluster-url" json:"cluster-url" xml:"cluster-url"`
 	// The environment name
-	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	Name string `form:"name" json:"name" xml:"name"`
 	// The namespace name
 	NamespaceName *string `form:"namespaceName,omitempty" json:"namespaceName,omitempty" xml:"namespaceName,omitempty"`
 	// The environment type
-	Type *string `form:"type,omitempty" json:"type,omitempty" xml:"type,omitempty"`
+	Type string `form:"type" json:"type" xml:"type"`
+}
+
+// Validate validates the EnvironmentAttributes type instance.
+func (ut *EnvironmentAttributes) Validate() (err error) {
+	if ut.Name == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "name"))
+	}
+	if ut.Type == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "type"))
+	}
+	if ut.ClusterURL == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "cluster-url"))
+	}
+	if !(ut.Type == "dev" || ut.Type == "build" || ut.Type == "stage" || ut.Type == "run") {
+		err = goa.MergeErrors(err, goa.InvalidEnumValueError(`type.type`, ut.Type, []interface{}{"dev", "build", "stage", "run"}))
+	}
+	return
 }
 
 // environmentListMeta user type.
